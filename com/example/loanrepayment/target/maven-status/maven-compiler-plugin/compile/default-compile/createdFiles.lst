@@ -1,0 +1,3 @@
+com\example\loanrepayment\controller\LoanController.class
+com\example\loanrepayment\LoanRepaymentApplication.class
+com\example\loanrepayment\service\LoanService.class
