@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Repayment System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #E7F2EF 0%, #A1C2BD 100%);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #19183B;
+        }
+        .container {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #19183B;
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #19183B;
+        }
+        select, input {
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #A1C2BD;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        select:focus, input:focus {
+            outline: none;
+            border-color: #708993;
+            box-shadow: 0 0 5px rgba(112, 137, 147, 0.5);
+        }
+        #weight {
+            display: none;
+        }
+        button {
+            background: linear-gradient(135deg, #708993 0%, #19183B 100%);
+            color: #fff;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background: #E7F2EF;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #A1C2BD;
+        }
+        .result h3 {
+            margin: 0;
+            color: #19183B;
+        }
+        .error {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: -15px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Loan Repayment System</h1>
+        <form id="loanForm">
+            <!-- Loan Type -->
+            <label for="loanType">Select Loan Type</label>
+            <select id="loanType" required>
+                <option value="">--Select--</option>
+                <option value="1">Home Loan / Mortgage</option>
+                <option value="2">Auto Loan / Car Loan</option>
+                <option value="3">Personal Loan</option>
+                <option value="4">Gold Loan</option>
+            </select>
+
+            <!-- Loan Amount -->
+            <label for="amount">Loan Amount (₹)</label>
+            <input type="number" id="amount" placeholder="Enter loan amount" min="1" required>
+
+            <!-- Gold Weight (for Gold Loan) -->
+            <label for="weight">Gold Weight (grams)</label>
+            <input type="number" id="weight" placeholder="Only for Gold Loan" min="1">
+
+            <!-- Duration -->
+            <label for="duration">Loan Duration (Years)</label>
+            <select id="duration" required>
+                <option value="">--Select--</option>
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+                <option value="20">20</option>
+            </select>
+
+            <!-- Button -->
+            <button type="button" id="calculateBtn">Calculate EMI</button>
+        </form>
+
+        <!-- EMI Result -->
+        <div class="result">
+            <h3 id="emiResult">Your EMI will be shown here</h3>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loanType').addEventListener('change', function() {
+            const weightField = document.getElementById('weight');
+            const amountField = document.getElementById('amount');
+            if (this.value === '4') {  // Gold Loan
+                weightField.style.display = 'block';
+                amountField.style.display = 'none';
+                amountField.required = false;
+                weightField.required = true;
+            } else {
+                weightField.style.display = 'none';
+                amountField.style.display = 'block';
+                amountField.required = true;
+                weightField.required = false;
+            }
+        });
+
+        document.getElementById('calculateBtn').addEventListener('click', async function() {
+            const loanType = document.getElementById('loanType').value;
+            const amount = parseFloat(document.getElementById('amount').value) || 0;
+            const weight = parseFloat(document.getElementById('weight').value) || 0;
+            const duration = parseInt(document.getElementById('duration').value);
+
+            if (!loanType || (!amount && loanType !== '4') || (!weight && loanType === '4') || !duration) {
+                document.getElementById('emiResult').innerHTML = '<span class="error">Please fill in all required fields.</span>';
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:8080/api/calculateEMI', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ loanType: parseInt(loanType), amount, weight, duration })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    document.getElementById('emiResult').innerHTML = `Your monthly EMI is ₹${data.emi}`;
+                } else {
+                    document.getElementById('emiResult').innerHTML = `<span class="error">${data.error}</span>`;
+                }
+            } catch (error) {
+                document.getElementById('emiResult').innerHTML = '<span class="error">Error connecting to server. Please try again.</span>';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply for Loan - Loan Repayment System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #E7F2EF 0%, #A1C2BD 100%);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #19183B;
+        }
+        .container {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #19183B;
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #19183B;
+        }
+        select, input {
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #A1C2BD;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        select:focus, input:focus {
+            outline: none;
+            border-color: #708993;
+            box-shadow: 0 0 5px rgba(112, 137, 147, 0.5);
+        }
+        button {
+            background: linear-gradient(135deg, #708993 0%, #19183B 100%);
+            color: #fff;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Apply for a New Loan</h1>
+        <form id="applyForm">
+            <label for="loanType">Loan Type</label>
+            <select id="loanType" required>
+                <option value="">--Select--</option>
+                <option>Home Loan / Mortgage</option>
+                <option>Auto Loan / Car Loan</option>
+                <option>Personal Loan</option>
+                <option>Gold Loan</option>
+            </select>
+
+            <label for="amount">Requested Amount (₹)</label>
+            <input type="number" id="amount" placeholder="Enter amount" min="10000" required>
+
+            <label for="duration">Duration (Years)</label>
+            <select id="duration" required>
+                <option value="">--Select--</option>
+                <option>5</option>
+                <option>10</option>
+                <option>15</option>
+                <option>20</option>
+            </select>
+
+            <label for="income">Annual Income (₹)</label>
+            <input type="number" id="income" placeholder="Enter your annual income" min="0" required>
+
+            <button type="submit">Submit Application</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('applyForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Simulate submission
+            alert('Application submitted successfully! We will review it shortly.');
+            window.location.href = 'dashboard.html';
+        });
+    </script>
+</body>
+</html>
